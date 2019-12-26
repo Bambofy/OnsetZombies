@@ -230,6 +230,8 @@ function ZombieCheckHitPlayers()
 end
 
 function DamagePlayer(npcId, plyId)
+    if not IsValidPlayer(plyId) then return end
+    
     local timeNow = GetTimeSeconds()
     local lastHit = GetNPCPropertyValue(npcId, "LAST_HIT")
 
