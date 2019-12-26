@@ -9,6 +9,10 @@ ZOMBIES.SPAWNTIMER = {
     MAX = 120000,
     CURRENT = 100000
 }
+ZOMBIES.SPEED = {
+    MIN = 100,
+    MAX = 800
+}
 ZOMBIES.PROCESSTIMER = 1000 -- how many MS between position updates
 ZOMBIES.PROCESSTIMER_HITS = 200 -- how many MS between hit checks.
 ZOMBIES.DISTANCE_THRESHOLD = 100  -- how close before a punch thrown
@@ -22,12 +26,12 @@ ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
 AddCommand("zombies_disabletimer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
-AddCommand("zombies_spawnzombie", function(ply)
+AddCommand("zombies_spawn", function(ply)
     SpawnZombie(ply)
 end)
 
 
-AddCommand("zombies_clearzombies", function(ply)
+AddCommand("zombies_clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
         if GetNPCPropertyValue(npcID, "IS_ZOMBIE") then
             DestroyNPC(npcID)
@@ -95,6 +99,8 @@ function SpawnZombie(ply)
     SetNPCPropertyValue(zombieNPC, "HEALTH", hp)
     SetNPCPropertyValue(zombieNPC, "IS_ZOMBIE", true, true)
     SetNPCPropertyValue(zombieNPC, "LAST_HIT", GetTimeSeconds())
+    local speed = math.random(ZOMBIES.SPEED.MIN, ZOMBIES.SPEED.MAX)
+    SetNPCPropertyValue(zombieNPC, "RUN_SPEED", speed)
 end
 
 
@@ -133,7 +139,9 @@ function ProcessZombies()
             -- update the zombies target
             if closestPlyFound then
                 local plyX, plyY, plyZ = GetPlayerLocation(closestPlyID)
-                SetNPCTargetLocation(npcID, plyX, plyY, plyZ)
+                local speed = GetNPCPropertyValue(npcID, "RUN_SPEED")
+
+                SetNPCTargetLocation(npcID, plyX, plyY, plyZ, speed)
             end
         end
     end
