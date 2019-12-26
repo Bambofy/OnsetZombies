@@ -26,6 +26,11 @@ ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
 AddCommand("zombies_disabletimer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
+
+AddCommand("zombies_enabletimer", function(ply)
+    ZOMBIES.SPAWNTIMER.ACTIVE = false
+end)
+
 AddCommand("zombies_spawn", function(ply)
     SpawnZombie(ply)
 end)
