@@ -58,8 +58,6 @@ AddCommand("zombies_enable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
-
-
 AddCommand("zombies_spawn_wave", function(ply)
     SpawnZombies(ply)
 end)
@@ -83,8 +81,6 @@ AddCommand("zombies_spawn_at_ext", function(ply, x, y, z, hp, dmg, speed)
     SpawnZombie(tonumber(x) ,tonumber(y) , tonumber(z) , tonumber(hp) , tonumber(dmg) , tonumber(speed))
 end)
 
-
-
 AddCommand("zombies_clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
         if GetNPCPropertyValue(npcID, "IS_ZOMBIE") then
@@ -98,26 +94,34 @@ end)
 --[[
     External API
 ]]
--- force spawn a few zombies
-AddFunctionExport("zombies_spawn", function(ply)
+AddFunctionExport("zombies_spawn_wave", function(ply)
+    SpawnZombies(ply)
+end)
+
+AddFunctionExport("zombies_spawn_here", function(ply)
     SpawnZombieAtPlayer(ply)
 end)
 
-AddFunctionExport("zombies_spawnsingle", function(ply, x, y, z)
-    SpawnZombie(x, y, z)
+AddFunctionExport("zombies_spawn_here_ext", function(ply, hp, dmg, speed)
+    local x, y, z = GetPlayerLocation(ply)
+    SpawnZombie(x, y, z, tonumber(hp), tonumber(dmg), tonumber(speed))
 end)
 
-AddFunctionExport("zombies_spawnsingle_ext", function(ply, x, y, z, hp, dmg, speed)
-    SpawnZombie(x, y, z, hp, dmg, speed)
+AddFunctionExport("zombies_spawn_at", function(ply, x, y, z)
+    SpawnZombie(tonumber(x), tonumber(y), tonumber(z))
+end)
+
+AddFunctionExport("zombies_spawn_at_ext", function(ply, x, y, z, hp, dmg, speed)
+    SpawnZombie(tonumber(x) ,tonumber(y) , tonumber(z) , tonumber(hp) , tonumber(dmg) , tonumber(speed))
 end)
 
 -- enable zombies to spawn on a timer tick.
-AddFunctionExport("zombies_enabletimer", function(ply)
+AddFunctionExport("zombies_enable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = true
 end)
 
 -- disables zombies spawning on timer.
-AddFunctionExport("zombies_disabletimer", function(ply)
+AddFunctionExport("zombies_disable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
