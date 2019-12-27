@@ -59,7 +59,7 @@ AddCommand("zombies_enable_timer", function(ply)
 end)
 
 AddCommand("zombies_spawn", function(ply)
-    SpawnZombies(ply)
+    SpawnZombies()
 end)
 
 
@@ -196,7 +196,7 @@ function SpawnZombie(x, y, z, hp, dmg, speed)
 
     local clothesId = ZOMBIES.CLOTHESLIST[math.random(1, #ZOMBIES.CLOTHESLIST)];
     print("Clothes id", clothesId)
-    SetNPCPropertyValue(zombieNPC, "CLOTHES_ID", clothesId)
+    SetNPCPropertyValue(zombieNPC, "CLOTHES_ID", tonumber(clothesId))
 
     if hp == nil then
         hp = math.random(ZOMBIES.HEALTH.MIN, ZOMBIES.HEALTH.MAX)
