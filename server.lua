@@ -94,39 +94,39 @@ end)
 --[[
     External API
 ]]
-AddFunctionExport("zombies_spawn_wave", function(ply)
+AddFunctionExport("spawn_wave", function(ply)
     SpawnZombies(ply)
 end)
 
-AddFunctionExport("zombies_spawn_here", function(ply)
+AddFunctionExport("spawn_here", function(ply)
     SpawnZombieAtPlayer(ply)
 end)
 
-AddFunctionExport("zombies_spawn_here_ext", function(ply, hp, dmg, speed)
+AddFunctionExport("spawn_here_ext", function(ply, hp, dmg, speed)
     local x, y, z = GetPlayerLocation(ply)
     SpawnZombie(x, y, z, tonumber(hp), tonumber(dmg), tonumber(speed))
 end)
 
-AddFunctionExport("zombies_spawn_at", function(ply, x, y, z)
+AddFunctionExport("spawn_at", function(ply, x, y, z)
     SpawnZombie(tonumber(x), tonumber(y), tonumber(z))
 end)
 
-AddFunctionExport("zombies_spawn_at_ext", function(ply, x, y, z, hp, dmg, speed)
+AddFunctionExport("spawn_at_ext", function(ply, x, y, z, hp, dmg, speed)
     SpawnZombie(tonumber(x) ,tonumber(y) , tonumber(z) , tonumber(hp) , tonumber(dmg) , tonumber(speed))
 end)
 
 -- enable zombies to spawn on a timer tick.
-AddFunctionExport("zombies_enable_timer", function(ply)
+AddFunctionExport("enable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = true
 end)
 
 -- disables zombies spawning on timer.
-AddFunctionExport("zombies_disable_timer", function(ply)
+AddFunctionExport("disable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
 -- deletes all zombies from server.
-AddFunctionExport("zombies_clear", function(ply)
+AddFunctionExport("clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
         if GetNPCPropertyValue(npcID, "IS_ZOMBIE") then
             DestroyNPC(npcID)
@@ -136,13 +136,13 @@ end)
 
 -- takes a function
 -- function onZombieDeath(ply, npcid)
-AddFunctionExport("zombies_onzombiedeath", function(pFunctionID, pFunction)
+AddFunctionExport("onzombiedeath", function(pFunctionID, pFunction)
     ZOMBIES.CALLBACKS.ZOMBIE_DIE[pFunctionID] = pFunction
 end)
 
 -- takes a function
 -- function onZombieSpawn(npcid)
-AddFunctionExport("zombies_onzombiespawn", function(pFunctionID, pFunction)
+AddFunctionExport("onzombiespawn", function(pFunctionID, pFunction)
     ZOMBIES.CALLBACKS.ZOMBIE_SPAWN[pFunctionID] = pFunction
 end)
 
