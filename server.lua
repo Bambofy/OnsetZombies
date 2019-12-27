@@ -3,6 +3,9 @@
 
 ZOMBIES = {}
 ZOMBIES.NPC = {}
+ZOMBIES.CALLBACKS = {}
+ZOMBIES.CALLBACKS.ZOMBIE_DIE = {}
+ZOMBIES.CALLBACKS.ZOMBIE_SPAWN = {}
 
 --[[
     Configurations
@@ -95,6 +98,20 @@ AddFunctionExport("zombies_clear", function(ply)
     end
 end)
 
+-- takes a function
+-- function onZombieDeath(ply, npcid)
+AddFunctionExport("zombies_onzombiedeath", function(pFunctionID, pFunction)
+    ZOMBIES.CALLBACKS.ZOMBIE_DIE[pFunctionID] = pFunction
+end)
+
+-- takes a function
+-- function onZombieSpawn(npcid)
+AddFunctionExport("zombies_onzombiespawn", function(pFunctionID, pFunction)
+    ZOMBIES.CALLBACKS.ZOMBIE_SPAWN[pFunctionID] = pFunction
+end)
+
+
+
 AddEvent("OnPackageStart", function()
     print("[SV] Zombies initialized...")
 
@@ -156,6 +173,12 @@ function SpawnZombie(ply)
     SetNPCPropertyValue(zombieNPC, "LAST_HIT", GetTimeSeconds())
     local speed = math.random(ZOMBIES.SPEED.MIN, ZOMBIES.SPEED.MAX)
     SetNPCPropertyValue(zombieNPC, "RUN_SPEED", speed)
+
+
+    for k,v in pairs(ZOMBIES.CALLBACKS.ZOMBIE_SPAWN) do
+        v(zombieNPC)
+    end
+
 end
 
 
@@ -213,12 +236,12 @@ AddEvent("OnNPCDamage", function(npcId, damageType, amount)
     
     local newHp = GetNPCPropertyValue(npcId, "HEALTH")
     if newHp <= 0 then
-        KillZombie(npcId)
+        ZombieDeath(npcId)
     end
 end)
 
 
-function KillZombie(npcId)
+function ZombieDeath(npcId)
     local npcX, npcY, npcZ = GetNPCLocation(npcId)
 
     -- implement pick rarity
@@ -226,6 +249,10 @@ function KillZombie(npcId)
     if (chance > 80) then
         local modelId = math.random(4, 22)
         CreatePickup(modelId, npcX, npcY, npcZ)
+    end
+
+    for k,v in pairs(ZOMBIES.CALLBACKS.ZOMBIE_DIE) do
+        v(npcId)
     end
 
     SetNPCRagdoll(npcId, true)
