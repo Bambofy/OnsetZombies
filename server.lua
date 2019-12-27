@@ -134,19 +134,6 @@ AddFunctionExport("clear", function(ply)
     end
 end)
 
--- takes a function
--- function onZombieDeath(ply, npcid)
-AddFunctionExport("onzombiedeath", function(pFunctionID, pFunction)
-    ZOMBIES.CALLBACKS.ZOMBIE_DIE[pFunctionID] = pFunction
-end)
-
--- takes a function
--- function onZombieSpawn(npcid)
-AddFunctionExport("onzombiespawn", function(pFunctionID, pFunction)
-    print("ZOMBIESPAWNEXPORTCALLED")
-    ZOMBIES.CALLBACKS.ZOMBIE_SPAWN[pFunctionID] = pFunction
-end)
-
 
 
 AddEvent("OnPackageStart", function()
@@ -208,6 +195,7 @@ function SpawnZombie(x, y, z, hp, dmg, speed)
     local zombieNPC = CreateNPC(positionX, positionY, z, 0)
 
     local clothesId = ZOMBIES.CLOTHESLIST[math.random(1, #ZOMBIES.CLOTHESLIST)];
+    print("Clothes id", clothesId)
     SetNPCPropertyValue(zombieNPC, "CLOTHES_ID", clothesId)
 
     if hp == nil then
@@ -227,11 +215,6 @@ function SpawnZombie(x, y, z, hp, dmg, speed)
         dmg = math.random(ZOMBIES.DAMAGE.MIN, ZOMBIES.DAMAGE.MAX)
     end
     SetNPCPropertyValue(zombieNPC, "DAMAGE", dmg)
-
-
-    for k,v in pairs(ZOMBIES.CALLBACKS.ZOMBIE_SPAWN) do
-        v(zombieNPC)
-    end
 end
 
 
@@ -302,10 +285,6 @@ function ZombieDeath(npcId)
     if (chance > 80) then
         local modelId = math.random(4, 22)
         CreatePickup(modelId, npcX, npcY, npcZ)
-    end
-
-    for k,v in pairs(ZOMBIES.CALLBACKS.ZOMBIE_DIE) do
-        v(npcId)
     end
 
     SetNPCRagdoll(npcId, true)
