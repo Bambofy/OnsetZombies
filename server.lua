@@ -78,7 +78,15 @@ end)
 -- force spawn a few zombies
 AddFunctionExport("zombies_spawn", function(ply)
     -- todo, check if admin
-    SpawnZombie(ply)
+    SpawnZombieAtPlayer(ply)
+end)
+
+AddFunctionExport("zombies_spawnsingle", function(ply, x, y, z)
+    SpawnZombie(x, y, z)
+end)
+
+AddFunctionExport("zombies_spawnsingle_ext", function(ply, x, y, z, hp, dmg, speed)
+    SpawnZombie(x, y, z, hp, dmg, speed)
 end)
 
 -- enable zombies to spawn on a timer tick.
@@ -144,7 +152,7 @@ function SpawnZombies()
             -- spawn N number of zombies close by.
             local zombieCount = math.random(ZOMBIES.SPAWNCOUNT.MIN, ZOMBIES.SPAWNCOUNT.MAX)
             for i=0, zombieCount do
-                SpawnZombie(ply)
+                SpawnZombieAtPlayer(ply)
             end
         end
     end
@@ -155,10 +163,13 @@ function SpawnZombies()
     end)
 end
 
-function SpawnZombie(ply)
-    local x, y, z = GetPlayerLocation(ply)
-    local h = GetPlayerHeading(ply)
 
+function SpawnZombieAtPlayer(ply)
+    local x, y, z = GetPlayerLocation(ply)
+    SpawnZombie(x, y, z)
+end
+
+function SpawnZombie(x, y, z, hp, dmg, speed)
     -- implement spawning distance modifies
     local magnitude = math.random(ZOMBIES.SPAWNRADIUS.MIN, ZOMBIES.SPAWNRADIUS.MAX)
     local dirX = math.random(-1000, 1000) / 1000
@@ -167,23 +178,33 @@ function SpawnZombie(ply)
     local positionX = x + (dirX * magnitude)
     local positionY = y + (dirY * magnitude)
 
-    local zombieNPC = CreateNPC(positionX, positionY, z, h)
+    local zombieNPC = CreateNPC(positionX, positionY, z, 0)
 
     local clothesId = ZOMBIES.CLOTHESLIST[math.random(1, #ZOMBIES.CLOTHESLIST)];
     SetNPCPropertyValue(zombieNPC, "CLOTHES_ID", clothesId)
 
-    local hp = math.random(ZOMBIES.HEALTH.MIN, ZOMBIES.HEALTH.MAX)
+    if hp == nil then
+        hp = math.random(ZOMBIES.HEALTH.MIN, ZOMBIES.HEALTH.MAX)
+    end
     SetNPCPropertyValue(zombieNPC, "HEALTH", hp)
     SetNPCPropertyValue(zombieNPC, "IS_ZOMBIE", true, true)
     SetNPCPropertyValue(zombieNPC, "LAST_HIT", GetTimeSeconds())
-    local speed = math.random(ZOMBIES.SPEED.MIN, ZOMBIES.SPEED.MAX)
+
+    if speed == nil then
+        speed = math.random(ZOMBIES.SPEED.MIN, ZOMBIES.SPEED.MAX)
+    end
     SetNPCPropertyValue(zombieNPC, "RUN_SPEED", speed)
+
+
+    if dmg == nil then
+        dmg = math.random(ZOMBIES.DAMAGE.MIN, ZOMBIES.DAMAGE.MAX)
+    end
+    SetNPCPropertyValue(zombieNPC, "DAMAGE", dmg)
 
 
     for k,v in pairs(ZOMBIES.CALLBACKS.ZOMBIE_SPAWN) do
         v(zombieNPC)
     end
-
 end
 
 
@@ -321,8 +342,7 @@ function DamagePlayer(npcId, plyId)
         -- implement sound
         SetNPCAnimation(npcId, "THROW", false)
 
-        -- implement damage modifier
-        local damage = math.random(ZOMBIES.DAMAGE.MIN,ZOMBIES.DAMAGE.MAX)
+        local damage = GetNPCPropertyValue(npcId, "DAMAGE")
 
         -- implement armor modifier
         local currHp = GetPlayerHealth(plyId)
