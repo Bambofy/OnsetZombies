@@ -58,7 +58,7 @@ AddCommand("zombies_enable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
-AddCommand("zombies_spawn_wave", function(ply)
+AddCommand("zombies_spawn", function(ply)
     SpawnZombies(ply)
 end)
 
