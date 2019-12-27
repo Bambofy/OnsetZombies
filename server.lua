@@ -50,17 +50,42 @@ ZOMBIES.PROCESSTIMER_HITS = 200 -- how many MS between hit checks.
 --[[
     List of commands for administrators.
 ]]
-AddCommand("zombies_disabletimer", function(ply)
+AddCommand("zombies_disable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
-AddCommand("zombies_enabletimer", function(ply)
+AddCommand("zombies_enable_timer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
 
-AddCommand("zombies_spawn", function(ply)
+
+
+AddCommand("zombies_spawn_wave", function(ply)
     SpawnZombie(ply)
 end)
+
+
+AddCommand("zombies_spawn_here", function(ply,)
+    local x, y, z = GetPlayerLocation(ply)
+    SpawnZombie(x, y, z)
+end)
+
+AddCommand("zombies_spawn_here_ext", function(ply, hp, dmg, speed)
+    local x, y, z = GetPlayerLocation(ply)
+    SpawnZombie(x, y, z, tonumber(hp), tonumber(dmg), tonumber(speed))
+end)
+
+
+
+AddCommand("zombies_spawn_at", function(ply, x, y, z)
+    SpawnZombie(x, y, z)
+end)
+
+AddCommand("zombies_spawn_at_ext", function(ply, x, y, z, hp, dmg, speed)
+    SpawnZombie(tonumber(x) ,tonumber(y) , tonumber(z) , tonumber(hp) , tonumber(dmg) , tonumber(speed))
+end)
+
+
 
 AddCommand("zombies_clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
