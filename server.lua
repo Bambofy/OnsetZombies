@@ -38,10 +38,7 @@ ZOMBIES.DAMAGE = {
     MAX = 10
 }
 ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
-ZOMBIES.CLOTHESLIST = {
-    21,
-    22
-}
+
 
 ZOMBIES.PROCESSTIMER = 1000 -- how many MS between position updates
 ZOMBIES.PROCESSTIMER_HITS = 200 -- how many MS between hit checks.
@@ -143,6 +140,7 @@ end)
 -- takes a function
 -- function onZombieSpawn(npcid)
 AddFunctionExport("onzombiespawn", function(pFunctionID, pFunction)
+    print("ZOMBIESPAWNEXPORTCALLED")
     ZOMBIES.CALLBACKS.ZOMBIE_SPAWN[pFunctionID] = pFunction
 end)
 
@@ -205,9 +203,6 @@ function SpawnZombie(x, y, z, hp, dmg, speed)
     local positionY = y + (dirY * magnitude)
 
     local zombieNPC = CreateNPC(positionX, positionY, z, 0)
-
-    local clothesId = ZOMBIES.CLOTHESLIST[math.random(1, #ZOMBIES.CLOTHESLIST)];
-    SetNPCPropertyValue(zombieNPC, "CLOTHES_ID", clothesId)
 
     if hp == nil then
         hp = math.random(ZOMBIES.HEALTH.MIN, ZOMBIES.HEALTH.MAX)
