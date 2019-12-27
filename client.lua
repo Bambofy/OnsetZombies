@@ -4,6 +4,7 @@ end)
 
 AddEvent("OnNPCStreamIn", function(npc)
     if GetNPCPropertyValue(npc, "IS_ZOMBIE") ~= nil then
-        SetNPCClothingPreset(npc, 21)
+        local clothesId = GetNPCPropertyValue(npc, "CLOTHES_ID")
+        SetNPCClothingPreset(npc, clothesId)
     end
 end)
