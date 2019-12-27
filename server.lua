@@ -58,8 +58,6 @@ AddCommand("zombies_spawn", function(ply)
     SpawnZombie(ply)
 end)
 
-end)
-
 AddCommand("zombies_clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
         if GetNPCPropertyValue(npcID, "IS_ZOMBIE") then
