@@ -9,22 +9,18 @@ ZOMBIES.NPC = {}
 ]]
 ZOMBIES.SPAWNTIMER = {
     ACTIVE = true,
-    MIN = 60000,
-    MAX = 120000,
-    CURRENT = 100000
+    MIN = 60000, -- ms
+    MAX = 120000, -- ms
+    CURRENT = 100000 -- ms
 }
 ZOMBIES.SPEED = {
     MIN = 100,
     MAX = 800
 }
-ZOMBIES.PROCESSTIMER = 1000 -- how many MS between position updates
-ZOMBIES.PROCESSTIMER_HITS = 200 -- how many MS between hit checks.
-ZOMBIES.DISTANCE_THRESHOLD = 100  -- how close before a punch thrown
 ZOMBIES.SPAWNRADIUS = {
     MIN = 1000,
     MAX = 3000
 }
-ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
 ZOMBIES.SPAWNCOUNT = {
     MIN = 1,
     MAX = 4
@@ -33,10 +29,15 @@ ZOMBIES.HEALTH = {
     MIN = 100,
     MAX = 1000
 }
+ZOMBIES.DISTANCE_THRESHOLD = 100  -- how close before a punch thrown
 ZOMBIES.DAMAGE = {
     MIN = 1,
     MAX = 10
 }
+ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
+
+ZOMBIES.PROCESSTIMER = 1000 -- how many MS between position updates
+ZOMBIES.PROCESSTIMER_HITS = 200 -- how many MS between hit checks.
 
 
 --[[
