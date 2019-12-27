@@ -61,20 +61,18 @@ end)
 
 
 AddCommand("zombies_spawn_wave", function(ply)
-    SpawnZombie(ply)
+    SpawnZombies(ply)
 end)
 
 
-AddCommand("zombies_spawn_here", function(ply,)
-    local x, y, z = GetPlayerLocation(ply)
-    SpawnZombie(x, y, z)
+AddCommand("zombies_spawn_here", function(ply)
+    SpawnZombieAtPlayer(ply)
 end)
 
 AddCommand("zombies_spawn_here_ext", function(ply, hp, dmg, speed)
     local x, y, z = GetPlayerLocation(ply)
     SpawnZombie(x, y, z, tonumber(hp), tonumber(dmg), tonumber(speed))
 end)
-
 
 
 AddCommand("zombies_spawn_at", function(ply, x, y, z)
@@ -102,7 +100,6 @@ end)
 ]]
 -- force spawn a few zombies
 AddFunctionExport("zombies_spawn", function(ply)
-    -- todo, check if admin
     SpawnZombieAtPlayer(ply)
 end)
 
