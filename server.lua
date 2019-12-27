@@ -3,6 +3,10 @@
 
 ZOMBIES = {}
 ZOMBIES.NPC = {}
+
+--[[
+    Configurations
+]]
 ZOMBIES.SPAWNTIMER = {
     ACTIVE = true,
     MIN = 60000,
@@ -21,8 +25,23 @@ ZOMBIES.SPAWNRADIUS = {
     MAX = 3000
 }
 ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
+ZOMBIES.SPAWNCOUNT = {
+    MIN = 1,
+    MAX = 4
+}
+ZOMBIES.HEALTH = {
+    MIN = 100,
+    MAX = 1000
+}
+ZOMBIES.DAMAGE = {
+    MIN = 1,
+    MAX = 10
+}
 
 
+--[[
+    List of commands for administrators.
+]]
 AddCommand("zombies_disabletimer", function(ply)
     ZOMBIES.SPAWNTIMER.ACTIVE = false
 end)
@@ -35,6 +54,7 @@ AddCommand("zombies_spawn", function(ply)
     SpawnZombie(ply)
 end)
 
+end)
 
 AddCommand("zombies_clear", function(ply)
     for k,npcID in pairs(GetAllNPC()) do
@@ -44,6 +64,35 @@ AddCommand("zombies_clear", function(ply)
     end
 end)
 
+
+
+--[[
+    External API
+]]
+-- force spawn a few zombies
+AddFunctionExport("zombies_spawn", function(ply)
+    -- todo, check if admin
+    SpawnZombie(ply)
+end)
+
+-- enable zombies to spawn on a timer tick.
+AddFunctionExport("zombies_enabletimer", function(ply)
+    ZOMBIES.SPAWNTIMER.ACTIVE = true
+end)
+
+-- disables zombies spawning on timer.
+AddFunctionExport("zombies_disabletimer", function(ply)
+    ZOMBIES.SPAWNTIMER.ACTIVE = false
+end)
+
+-- deletes all zombies from server.
+AddFunctionExport("zombies_clear", function(ply)
+    for k,npcID in pairs(GetAllNPC()) do
+        if GetNPCPropertyValue(npcID, "IS_ZOMBIE") then
+            DestroyNPC(npcID)
+        end
+    end
+end)
 
 AddEvent("OnPackageStart", function()
     print("[SV] Zombies initialized...")
@@ -73,7 +122,7 @@ function SpawnZombies()
         -- for each player in the game
         for k,ply in pairs(GetAllPlayers()) do
             -- spawn N number of zombies close by.
-            local zombieCount = math.random(1, 3)
+            local zombieCount = math.random(ZOMBIES.SPAWNCOUNT.MIN, ZOMBIES.SPAWNCOUNT.MAX)
             for i=0, zombieCount do
                 SpawnZombie(ply)
             end
@@ -100,7 +149,7 @@ function SpawnZombie(ply)
 
     local zombieNPC = CreateNPC(positionX, positionY, z, h)
 
-    local hp = math.random(100, 600)
+    local hp = math.random(ZOMBIES.HEALTH.MIN, ZOMBIES.HEALTH.MAX)
     SetNPCPropertyValue(zombieNPC, "HEALTH", hp)
     SetNPCPropertyValue(zombieNPC, "IS_ZOMBIE", true, true)
     SetNPCPropertyValue(zombieNPC, "LAST_HIT", GetTimeSeconds())
@@ -240,7 +289,7 @@ function DamagePlayer(npcId, plyId)
         SetNPCAnimation(npcId, "THROW", false)
 
         -- implement damage modifier
-        local damage = math.random(1,20)
+        local damage = math.random(ZOMBIES.DAMAGE.MIN,ZOMBIES.DAMAGE.MAX)
 
         -- implement armor modifier
         local currHp = GetPlayerHealth(plyId)
