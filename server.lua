@@ -40,6 +40,7 @@ ZOMBIES.DAMAGE = {
 ZOMBIES.HIT_DELAY = 2 -- 2 seconds between punches
 ZOMBIES.CLOTHESLIST = {
     21,
+    22
 }
 
 ZOMBIES.PROCESSTIMER = 1000 -- how many MS between position updates
